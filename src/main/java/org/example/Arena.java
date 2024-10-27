@@ -21,6 +21,7 @@ public class Arena {
     private List<Wall> walls;
     private List<Bouble> boubles;
     private PointLabel pointLabel;
+    private Ghost ghost;
 
     public Arena(String mapFilePath) {
         this.walls = new ArrayList<>();
@@ -47,6 +48,9 @@ public class Arena {
                     else if (c == '.') {
                         boubles.add(new Bouble(col, row));
                     }
+                    else if(c == 'G'){
+                        ghost = new Ghost(col, row);
+                    }
                 }
                 row++;
             }
@@ -70,11 +74,12 @@ public class Arena {
         }
         pointLabel.draw(graphics);
         hero.draw(graphics);
+        ghost.draw(graphics);
     }
 
     public void moveHero() {
         Position newPosition = hero.move(width, height);
-        if (canHeroMove(newPosition)) {
+        if (canMove(newPosition)) {
             if (!getPoint(newPosition)) {
                 pointLabel.incrementPoints();
                 System.out.println(pointLabel.getPoints());
@@ -83,7 +88,38 @@ public class Arena {
         }
     }
 
-    private boolean canHeroMove(Position position) {
+    public void moveGhost() {
+
+        Ghost.Direction direction = ghost.moveTowardsPacman(hero.getPosition(), width, height, walls);
+
+
+        Position newPosition;
+        switch (direction) {
+            case UP:
+                newPosition = new Position(ghost.getX(), ghost.getY() - 1);
+                break;
+            case DOWN:
+                newPosition = new Position(ghost.getX(), ghost.getY() + 1);
+                break;
+            case LEFT:
+                newPosition = new Position(ghost.getX() - 1, ghost.getY());
+                break;
+            case RIGHT:
+                newPosition = new Position(ghost.getX() + 1, ghost.getY());
+                break;
+            default:
+                newPosition = ghost.getPosition();
+                break;
+        }
+
+        if (canMove(newPosition)) {
+            ghost.setPosition(newPosition);
+        }
+    }
+
+
+
+    private boolean canMove(Position position) {
         if (position.getX() < 0 || position.getX() >= width || position.getY() < 0 || position.getY() >= height) {
             return false;
         }

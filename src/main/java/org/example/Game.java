@@ -25,13 +25,14 @@ public class Game {
             screen.startScreen();
             screen.doResizeIfNecessary();
 
-            arena = new Arena("/Users/leandrosampaio/IdeaProjects/semana3/src/maps/map.txt");
+            arena = new Arena("/Users/leandrosampaio/IdeaProjects/Pacman-LDTS/src/maps/map.txt");
 
 
             while (true) {
                 draw();
                 processInput();
                 arena.moveHero();
+                arena.moveGhost();
 
                 Thread.sleep(100);
 
