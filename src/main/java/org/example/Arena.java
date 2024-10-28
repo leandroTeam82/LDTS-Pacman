@@ -112,9 +112,9 @@ public class Arena {
                 break;
         }
 
-        if (canMove(newPosition)) {
+
             ghost.setPosition(newPosition);
-        }
+
     }
 
 
